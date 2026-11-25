@@ -1,0 +1,84 @@
+name: Expand Marketplace Pro package
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "marketplace-pro-railway-ready.zip"
+      - ".github/workflows/unpack-project.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Install extraction tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip rsync
+
+      - name: Extract Laravel project
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="marketplace-pro-railway-ready.zip"
+          if [ ! -f "$archive" ]; then
+            echo "::error::Package archive not found: $archive"
+            exit 1
+          fi
+
+          mkdir -p /tmp/marketplace-pro
+          unzip -q "$archive" -d /tmp/marketplace-pro
+
+          artisan_path="$(find /tmp/marketplace-pro -type f -name artisan -print -quit)"
+          if [ -z "$artisan_path" ]; then
+            echo "::error::Laravel artisan file not found in archive"
+            exit 1
+          fi
+
+          project_root="$(dirname "$artisan_path")"
+          test -f "$project_root/composer.json"
+          test -f "$project_root/Dockerfile"
+
+          rsync -a --exclude='.git' "$project_root/" ./
+
+          rm -f "$archive"
+
+      - name: Validate extracted project
+        run: |
+          set -euo pipefail
+          test -f artisan
+          test -f composer.json
+          test -f Dockerfile
+          test -d app
+          test -d bootstrap
+          test -d config
+          test -d database
+          test -d public
+          test -d resources
+          test -d routes
+          if [ -f .env ]; then
+            echo "::error::A real .env file must not be committed."
+            exit 1
+          fi
+
+      - name: Commit extracted source
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Expand Marketplace Pro Laravel source"
+            git push origin HEAD:main
+          fi
