@@ -17,7 +17,7 @@ RUN composer dump-autoload --no-dev --optimize
 
 FROM php:8.3-apache
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libicu-dev libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev unzip \
+    ca-certificates libicu-dev libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j"$(nproc)" pdo_mysql intl bcmath zip gd opcache \
     && a2enmod rewrite headers \
