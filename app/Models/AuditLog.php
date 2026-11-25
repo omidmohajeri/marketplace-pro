@@ -1,0 +1,8 @@
+<?php
+// مدل ثبت رویداد؛ حذف یا ویرایش آن را در Policy مسدود کنید
+namespace App\Models; use Illuminate\Database\Eloquent\Model;
+class AuditLog extends Model {
+ protected $fillable=['user_id','event','subject_type','subject_id','metadata','ip_address','user_agent'];
+ protected $casts=['metadata'=>'array'];
+ public function subject(){return $this->morphTo();}
+}

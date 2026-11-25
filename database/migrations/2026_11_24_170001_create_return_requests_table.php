@@ -1,0 +1,4 @@
+<?php
+// درخواست مرجوعی سفارش یا اقلام آن
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration {public function up():void {Schema::create('return_requests',function(Blueprint $t){$t->id();$t->foreignId('order_id')->constrained()->cascadeOnDelete();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->text('reason');$t->enum('status',['requested','approved','rejected','received','refunded'])->default('requested');$t->string('admin_note')->nullable();$t->string('refund_reference')->nullable();$t->timestamps();});} public function down():void{Schema::dropIfExists('return_requests');}};

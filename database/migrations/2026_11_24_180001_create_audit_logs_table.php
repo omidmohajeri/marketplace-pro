@@ -1,0 +1,4 @@
+<?php
+// دفتر ثبت رویدادهای حساس برای پیگیری و ممیزی
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration {public function up():void {Schema::create('audit_logs',function(Blueprint $t){$t->id();$t->foreignId('user_id')->nullable()->constrained()->nullOnDelete();$t->string('event',120);$t->nullableMorphs('subject');$t->json('metadata')->nullable();$t->string('ip_address',45)->nullable();$t->text('user_agent')->nullable();$t->timestamps();$t->index(['event','created_at']);});} public function down():void{Schema::dropIfExists('audit_logs');}};

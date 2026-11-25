@@ -1,0 +1,28 @@
+راهنمای استقرار آزمایشی Marketplace Pro روی Railway
+
+این بسته شامل سورس یکپارچه فازهای ۱ تا ۲۰ به‌علاوه Dockerfile و اسکریپت شروع مخصوص Railway است.
+
+پیش‌نیازها:
+- یک مخزن GitHub خالی (ترجیحاً Private)
+- یک پروژه Railway با سرویس MySQL
+- متغیر APP_KEY در سرویس وب
+
+مقادیر سرویس وب در Railway:
+APP_NAME=Marketplace Pro
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=<خروجی دستور php artisan key:generate --show>
+APP_URL=https://<دامنه-سرویس>
+LOG_CHANNEL=stderr
+CACHE_STORE=file
+SESSION_DRIVER=file
+QUEUE_CONNECTION=sync
+
+اتصال دیتابیس:
+در Railway، سرویس MySQL را به همان پروژه اضافه کن. اسکریپت شروع به‌طور خودکار MYSQLHOST، MYSQLPORT، MYSQLDATABASE، MYSQLUSER و MYSQLPASSWORD را به DB_HOST، DB_PORT، DB_DATABASE، DB_USERNAME و DB_PASSWORD نگاشت می‌کند.
+
+مهم:
+- اولین اجرای سرویس، migrationها را با --force اجرا می‌کند.
+- این نسخه برای staging/آزمایش است؛ درگاه پرداخت واقعی و اتصال حمل‌ونقل واقعی در آن فعال نیست.
+- پیش از فروش واقعی، checkout، پرداخت، بازپرداخت، مجوزها، تست امنیتی و تست بار باید تکمیل و بررسی شوند.
+- از اجرای migrate:fresh در محیط دارای داده خودداری کن.
