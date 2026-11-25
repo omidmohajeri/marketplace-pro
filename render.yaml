@@ -18,6 +18,8 @@ services:
         value: mysql
       - key: DB_PORT
         value: "4000"
+      - key: MYSQL_ATTR_SSL_CA
+        value: /etc/ssl/certs/ca-certificates.crt
       - key: DB_HOST
         sync: false
       - key: DB_DATABASE
@@ -25,8 +27,6 @@ services:
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
-        sync: false
-      - key: MYSQL_ATTR_SSL_CA
         sync: false
       - key: APP_KEY
         sync: false
