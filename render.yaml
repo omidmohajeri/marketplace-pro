@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: marketplace-pro
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_PORT
+        value: "4000"
+      - key: DB_HOST
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: MYSQL_ATTR_SSL_CA
+        sync: false
+      - key: APP_KEY
+        sync: false
